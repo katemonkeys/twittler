@@ -14,22 +14,45 @@
         var $body = $('body');
         $body.html('');
 
-        var $button = $('<button type="button" onclick="alert()")>Get new tweets!</button>');
+        var $button = $('<button type="button" class="refresh">Get new tweets!</button>');
         $button.appendTo($body);
+        $(".refresh").on('click', function() {
+          if (streams.home.length >24) {
+            howManyTweets = streams.home.length - 24;
+            $("body").find(".deletable").remove();
+          }
+          var index = howManyTweets
+          while(index < streams.home.length){
+            var tweet = streams.home[index];
+            var $tweet = $('<div class="deletable"></div>');
+            var now = new Date();
+            $tweet.text(tweet.created_at.toString().match(/\d{2}:\d{2}:\d{2}/) + ' @' + tweet.user + ': ' + tweet.message);
+            $tweet.insertAfter("#topbar");
+            var isFound = false;
+            for (var i=0; i<activeUsers.length; i++) {
+              if (activeUsers[i] === tweet.user) {isFound = true;}
+            }
+            if (!isFound) {activeUsers.push(tweet.user);}
+            index += 1;
+          }
+          howManyTweets = streams.home.length; 
+        })
 
-        var $recentTweets = $('<p>Recent Tweets</p>');
+
+        var $recentTweets = $('<p id="topbar">Recent Tweets</p>');
         $recentTweets.appendTo($body);
 
         var activeUsers = [];
+        var howManyTweets = streams.home.length;                        //An updateable value for how long the array of tweets is.
         var index = streams.home.length - 1;
-        while(index >= 0){                                              //this part (with i -= 1) must be what makes it reverse chronological.
+        while(index >= 0){                                              //this part (with i -= 1) is what makes it reverse chronological.
           var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
+          var $tweet = $('<div class="deletable"></div>');
           var now = new Date();
           //This here is the implementation of part #2, but it is nicer than the whole Date object which is not pretty.
-          $tweet.text(now.toString().match(/\d{2}:\d{2}:\d{2}/) + ' @' + tweet.user + ': ' + tweet.message);
+          $tweet.text(tweet.created_at.toString().match(/\d{2}:\d{2}:\d{2}/) + ' @' + tweet.user + ': ' + tweet.message);
           $tweet.appendTo($body);
-//          if (activeUsers.contains(tweet.user)) {}                    // Why doesn't this work!!
+//          if (activeUsers.contains(tweet.user)) {}                    // Why doesn't this work!! I included underscore! 
           var isFound = false;
           for (var i=0; i<activeUsers.length; i++) {
             if (activeUsers[i] === tweet.user) {isFound = true;}
@@ -58,7 +81,7 @@
             if (streams.home[index].user === uname) {
               var tweet = streams.home[index];
               var $tweet = $('<div class="individual"></div>');
-              $tweet.text('@' + tweet.user + ': ' + tweet.message);
+              $tweet.text(tweet.created_at.toString().match(/\d{2}:\d{2}:\d{2}/) + '@' + tweet.user + ': ' + tweet.message);
               $tweet.appendTo($body);
 //              alert(streams.home[0].user);
             }
