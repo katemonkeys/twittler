@@ -3,13 +3,19 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <LINK href="stylesheet.css" rel="stylesheet" type="text/css">
   </head>
   <body>
+
     <script>
 
       $(document).ready(function(){
         var $body = $('body');
         $body.html('');
+
+        //var button = '';
+        var $button = $('<button type="button" onclick="alert()")>Refresh Me!</button>');
+        $button.appendTo($body);
 
         var index = streams.home.length - 1;
         while(index >= 0){                                              //this part (with i -= 1) must be what makes it reverse chronological.
@@ -22,15 +28,15 @@
           index -= 1;
         }
 
-    //Most properly, I want to listen for whenever "generateRandomTweet" is called, but less elegantly, I can just have it
-    //update every second or thereabouts, since a new tweet comes every (0,1.5) seconds.
-    // another thing that exists is $('li').length tells you how many li's there are
-    //or something like $('streams.home'),on('update', function() {now you display the updated one})
-    
-
+        var $activeUsers = 
       });
 
-
+    //Most properly, I want to listen for whenever "generateRandomTweet" is called BUT I can't do that how I thought because it doesn't update the DOM. 
+    //Less elegantly, I can just have it
+    //update every second or thereabouts, since a new tweet comes every (0,1.5) seconds.
+    // 
+    //or something like $('streams.home'),on('update', function() {now you display the updated one})
+      
     //Discarded thoughts:
     //For part 1: 
     //Can't listen for the ajax calls for "complete" or "isModified" because there is no call to a server??
@@ -41,8 +47,10 @@
           $tweet.prependTo($body);
         });        
     */
+    // another thing that exists is $('li').length tells you how many li's there are
 
     </script>
+
   </body>
 </html>
 
