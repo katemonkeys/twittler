@@ -12,16 +12,37 @@
         $body.html('');
 
         var index = streams.home.length - 1;
-        while(index >= 0){
+        while(index >= 0){                                              //this part (with i -= 1) must be what makes it reverse chronological.
           var tweet = streams.home[index];
           var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
+          var now = new Date();
+          //This here is the implementation of part #2, but it is nicer than the whole Date object which is not pretty.
+          $tweet.text(now.toString().match(/\d{2}:\d{2}:\d{2}/) + ' @' + tweet.user + ': ' + tweet.message);
           $tweet.appendTo($body);
           index -= 1;
         }
 
+    //Most properly, I want to listen for whenever "generateRandomTweet" is called, but less elegantly, I can just have it
+    //update every second or thereabouts, since a new tweet comes every (0,1.5) seconds.
+    // another thing that exists is $('li').length tells you how many li's there are
+    //or something like $('streams.home'),on('update', function() {now you display the updated one})
+    
+
       });
+
+
+    //Discarded thoughts:
+    //For part 1: 
+    //Can't listen for the ajax calls for "complete" or "isModified" because there is no call to a server??
+    /*        $('generateRandomTweet').on('complete', function() {
+          var tweet = streams.home[streams.home.length-1];
+          var $tweet = $('<div></div>');
+          $tweet.text('@' + tweet.user + ': ' + tweet.message);
+          $tweet.prependTo($body);
+        });        
+    */
 
     </script>
   </body>
 </html>
+
