@@ -3,6 +3,7 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <script src="underscore-min.js"></script>
     <LINK href="stylesheet.css" rel="stylesheet" type="text/css">
   </head>
   <body>
@@ -13,10 +14,13 @@
         var $body = $('body');
         $body.html('');
 
-        //var button = '';
-        var $button = $('<button type="button" onclick="alert()")>Refresh Me!</button>');
+        var $button = $('<button type="button" onclick="alert()")>Get new tweets!</button>');
         $button.appendTo($body);
 
+        var $recentTweets = $('<p>Recent Tweets</p>');
+        $recentTweets.appendTo($body);
+
+        var activeUsers = [];
         var index = streams.home.length - 1;
         while(index >= 0){                                              //this part (with i -= 1) must be what makes it reverse chronological.
           var tweet = streams.home[index];
@@ -25,10 +29,43 @@
           //This here is the implementation of part #2, but it is nicer than the whole Date object which is not pretty.
           $tweet.text(now.toString().match(/\d{2}:\d{2}:\d{2}/) + ' @' + tweet.user + ': ' + tweet.message);
           $tweet.appendTo($body);
+//          if (activeUsers.contains(tweet.user)) {}                    // Why doesn't this work!!
+          var isFound = false;
+          for (var i=0; i<activeUsers.length; i++) {
+            if (activeUsers[i] === tweet.user) {isFound = true;}
+          }
+          if (!isFound) {activeUsers.push(tweet.user);}
           index -= 1;
         }
 
-        var $activeUsers = 
+        var $whoIsHere = $('<p>Active Users</p>');
+        $whoIsHere.appendTo($body);
+
+        index = activeUsers.length - 1;
+        while(index >= 0){
+          var person = activeUsers[index];
+          var $person = $('<a class="username"></a>');
+          $person.text(person);
+          $person.appendTo($body);
+          index -= 1;
+        }
+
+        $(".username").on('click', function() {
+          $(".individual").remove();
+          var uname = $(this).text();
+          index = streams.home.length - 1;
+          while(index >= 0){              
+            if (streams.home[index].user === uname) {
+              var tweet = streams.home[index];
+              var $tweet = $('<div class="individual"></div>');
+              $tweet.text('@' + tweet.user + ': ' + tweet.message);
+              $tweet.appendTo($body);
+//              alert(streams.home[0].user);
+            }
+            index -= 1;
+          }
+        });
+          //alert(uname);
       });
 
     //Most properly, I want to listen for whenever "generateRandomTweet" is called BUT I can't do that how I thought because it doesn't update the DOM. 
